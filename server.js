@@ -14,31 +14,35 @@ app.use((req, res, next) => {
   next();
 });
 
-function createRandomUser() {
+let messages = [];
+
+function createRandomEmails() {
   return {
-    userId: faker.string.uuid(),
+    id: faker.string.uuid(),
     username: faker.internet.username(),
-    email: faker.internet.email(),
+    mail: faker.internet.email(),
     date: faker.date.past(),
   };
 }
 
-const users = faker.helpers.multiple(createRandomUser, {
-  count: 5,
-});
-
-let messages = [];
-
-users.forEach((user) => { 
-  messages.push({
-    id: user.userId,
-    from: user.email,
-    subject: `Hello from ${user.username}`,
-    body: "Long message body here",
-    received: user.date,
-    read: false,
+setInterval(() => { 
+  const emails = faker.helpers.multiple(createRandomEmails, {
+    count: 3,
   });
-})
+
+  emails.forEach((email) => {
+    const existing = messages.some((message) => message.id === email.id);
+
+    if (!existing) {messages.push({
+      id: email.id,
+      from: email.mail,
+      subject: `Hello from ${email.username}`,
+      body: "Long message body here",
+      received: email.date,
+      read: false,
+    }); }
+  });
+}, 3000)
 
 app.get("/messages/unread", (req, res) => {
   const unreadMessages = messages.filter((msg) => !msg.read);
