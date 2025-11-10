@@ -16,7 +16,9 @@ app.use((req, res, next) => {
 
 let messages = [];
 
-function createRandomEmails() {
+messages.push(createRandomEmail());
+
+function createRandomEmail() {
   return {
     id: faker.string.uuid(),
     username: faker.internet.username(),
@@ -26,7 +28,7 @@ function createRandomEmails() {
 }
 
 setInterval(() => { 
-  const emails = faker.helpers.multiple(createRandomEmails, {
+  const emails = faker.helpers.multiple(createRandomEmail, {
     count: 3,
   });
 
@@ -42,7 +44,7 @@ setInterval(() => {
       read: false,
     }); }
   });
-}, 3000)
+}, 28800000)
 
 app.get("/messages/unread", (req, res) => {
   const unreadMessages = messages.filter((msg) => !msg.read);
