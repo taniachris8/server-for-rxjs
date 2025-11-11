@@ -19,7 +19,7 @@ function createRandomEmail() {
     id: faker.string.uuid(),
     name: faker.person.firstName(),
     mail: faker.internet.email(),
-    date: faker.date.present(),
+    date: faker.date.recent({days:10}),
   };
 }
 
