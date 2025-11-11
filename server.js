@@ -35,16 +35,18 @@ setInterval(() => {
   emails.forEach((email) => {
     const existing = messages.some((message) => message.id === email.id);
 
-    if (!existing) {messages.push({
+    if (!existing) {
+      messages.push({
       id: email.id,
       from: email.mail,
       subject: `Hello from ${email.username}`,
       body: "Long message body here",
       received: email.date,
       read: false,
-    }); }
+      });
+    }
   });
-}, 28800000)
+}, 10000)
 
 app.get("/messages/unread", (req, res) => {
   const unreadMessages = messages.filter((msg) => !msg.read);
