@@ -16,16 +16,24 @@ app.use((req, res, next) => {
 
 let messages = [];
 
-messages.push(createRandomEmail());
-
 function createRandomEmail() {
   return {
     id: faker.string.uuid(),
-    username: faker.internet.username(),
+    name: faker.person.firstName(),
     mail: faker.internet.email(),
-    date: faker.date.past(),
+    date: faker.date.present(),
   };
 }
+
+const email = createRandomEmail();
+messages.push({
+  id: email.id,
+  from: email.mail,
+  subject: `Hello from ${email.username}`,
+  body: "Long message body here",
+  received: email.date,
+  read: false,
+});
 
 setInterval(() => { 
   const emails = faker.helpers.multiple(createRandomEmail, {
@@ -33,16 +41,16 @@ setInterval(() => {
   });
 
   emails.forEach((email) => {
-    const existing = messages.some((message) => message.id === email.id);
+    const alreadyExist = messages.some((message) => message.id === email.id);
 
-    if (!existing) {
+    if (!alreadyExist) {
       messages.push({
-      id: email.id,
-      from: email.mail,
-      subject: `Hello from ${email.username}`,
-      body: "Long message body here",
-      received: email.date,
-      read: false,
+        id: email.id,
+        from: email.mail,
+        subject: `Hello from ${email.username}`,
+        body: "Long message body here",
+        received: email.date,
+        read: false,
       });
     }
   });
