@@ -29,7 +29,7 @@ const email = createRandomEmail();
 messages.push({
   id: email.id,
   from: email.mail,
-  subject: `Hello from ${email.username}`,
+  subject: `Hello from ${email.name}`,
   body: "Long message body here",
   received: email.date,
   read: false,
