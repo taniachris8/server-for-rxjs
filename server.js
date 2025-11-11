@@ -14,8 +14,6 @@ app.use((req, res, next) => {
   next();
 });
 
-let messages = [];
-
 function createRandomEmail() {
   return {
     id: faker.string.uuid(),
@@ -25,47 +23,27 @@ function createRandomEmail() {
   };
 }
 
-const email = createRandomEmail();
-messages.push({
-  id: email.id,
-  from: email.mail,
-  subject: `Hello from ${email.name}`,
-  body: "Long message body here",
-  received: email.date,
-  read: false,
-});
-
-setInterval(() => { 
+app.get("/messages/unread", (req, res) => {
   const emails = faker.helpers.multiple(createRandomEmail, {
     count: 3,
   });
 
-  emails.forEach((email) => {
-    const alreadyExist = messages.some((message) => message.id === email.id);
-
-    if (!alreadyExist) {
-      messages.push({
-        id: email.id,
-        from: email.mail,
-        subject: `Hello from ${email.username}`,
-        body: "Long message body here",
-        received: email.date,
-        read: false,
-      });
-    }
-  });
-}, 10000)
-
-app.get("/messages/unread", (req, res) => {
-  const unreadMessages = messages.filter((msg) => !msg.read);
+  const newMessages = emails.map((email) => ({
+    id: email.id,
+    from: email.mail,
+    subject: `Hello from ${email.username}`,
+    body: "Long message body here",
+    received: email.date,
+    read: false,
+  }));
 
   const responseBody = {
     status: "ok",
     timestamp: Date.now(),
-    messages: unreadMessages,
+    messages: newMessages,
   };
 
-  logger.info("Unread messages requested");
+  logger.info("New messages requested");
   res.status(200).json(responseBody);
 });
 
